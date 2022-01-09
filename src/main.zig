@@ -4,9 +4,8 @@ const c = @cImport({
     @cInclude("libevdev/libevdev-uinput.h");
 });
 
-
 const FROM_KEY = c.KEY_CAPSLOCK;
-const TO_KEY   = c.KEY_ESC;
+const TO_KEY = c.KEY_ESC;
 
 pub fn main() anyerror!void {
     var input_device: []u8 = undefined;
@@ -25,7 +24,7 @@ pub fn main() anyerror!void {
 
     if (c.libevdev_grab(dev, c.LIBEVDEV_GRAB) != 0) return error.EvdevGrabError;
 
-    std.log.info("Re-mapping keys on {s}, {s}", .{input_device, c.libevdev_get_name(dev)});
+    std.log.info("Re-mapping keys on {s}, {s}", .{ input_device, c.libevdev_get_name(dev) });
 
     var uidev: ?*c.libevdev_uinput = undefined;
     if (c.libevdev_uinput_create_from_device(dev, c.LIBEVDEV_UINPUT_OPEN_MANAGED, &uidev) != 0) return error.UInputError;
@@ -50,7 +49,7 @@ pub fn main() anyerror!void {
                         // re-mapped key up
                         try write_event(uidev, ie.type, TO_KEY, 0);
                     },
-                    else => hold = false
+                    else => hold = false,
                 }
             } else hold = false;
         }
