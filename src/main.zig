@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
     var input_device: []u8 = undefined;
     if (std.os.argv.len == 1) {
         std.debug.print("Usage: {s} /dev/input/event<x>\n", .{std.os.argv[0]});
-        return error.ArgumentError;
+        std.os.exit(1);
     }
     input_device = std.mem.span(std.os.argv[1]);
 

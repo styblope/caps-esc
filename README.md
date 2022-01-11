@@ -20,6 +20,9 @@ Create systemd unit file `/etc/systemd/system/caps-esc@.service`
 ```
 [Unit]
 Description=Remap Esc key to CapsLock
+#BindsTo=sys-devices-virtual-input-%i.device
+#After=sys-devices-virtual-input-%i.device
+StopWhenUnneeded=true
 
 [Service]
 Type=simple
@@ -30,13 +33,15 @@ ExecStart=/usr/local/bin/caps-esc /dev/input/%i
 Create udev rules `/etc/udev/rules.d/99-usb-keyboard.rules`
 ```
 ACTION=="add", KERNEL=="event*", SUBSYSTEM=="input", ENV{ID_INPUT_KEYBOARD}=="1", \
-ENV{DEVPATH}!="/devices/virtual/input/*", OWNER="root", TAG+="systemd", ENV{SYSTEMD_WANTS}="caps-esc@$kernel.service"
+ENV{DEVPATH}!="/devices/virtual/input/*", ENV{SYSTEMD_ALIAS}+="/sys/devices/virtual/input/%k", \
+OWNER="root", TAG+="systemd", ENV{SYSTEMD_WANTS}="caps-esc@$kernel.service"
 ```
 
 Initialize and run
 ```
-$ systemctl daemon-reload 
+$ sudo systemctl daemon-reload 
 $ sudo udevadm control --reload
+$ sudo udevadm trigger --action=add
 ```
 
 Check the status
