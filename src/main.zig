@@ -2,6 +2,7 @@ const std = @import("std");
 const c = @cImport({
     @cInclude("libevdev/libevdev.h");
     @cInclude("libevdev/libevdev-uinput.h");
+    @cInclude("errno.h");
 });
 
 const FROM_KEY = c.KEY_CAPSLOCK;
@@ -35,7 +36,10 @@ pub fn main() anyerror!void {
     var hold: bool = false;
     var ie: c.input_event = undefined;
     while (true) {
-        if (c.libevdev_next_event(dev, c.LIBEVDEV_READ_FLAG_NORMAL, &ie) != 0) continue;
+        const rc = c.libevdev_next_event(dev, c.LIBEVDEV_READ_FLAG_NORMAL, &ie);
+        if (rc == -c.EAGAIN) continue;
+        if (rc < 0) return error.NextEventError;
+
         // re-map keys and write event to uinput
         if (ie.type == c.EV_KEY) {
             if (ie.code == FROM_KEY) {
