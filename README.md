@@ -30,7 +30,7 @@ User=root
 ExecStart=/usr/local/bin/caps-esc /dev/input/%i
 ```
 
-Create udev rules `/etc/udev/rules.d/99-usb-keyboard.rules`
+Create udev rules `/etc/udev/rules.d/99-caps-esc.rules`
 ```
 ACTION=="add", KERNEL=="event*", SUBSYSTEM=="input", ENV{ID_INPUT_KEYBOARD}=="1", \
 ENV{DEVPATH}!="/devices/virtual/input/*", ENV{SYSTEMD_ALIAS}+="/sys/devices/virtual/input/%k", \
