@@ -8,7 +8,7 @@ const c = @cImport({
 const FROM_KEY = c.KEY_CAPSLOCK;
 const TO_KEY = c.KEY_ESC;
 
-pub fn main() anyerror!void {
+pub fn main() !void {
     var input_device: []u8 = undefined;
     if (std.os.argv.len == 1) {
         std.debug.print("Usage: {s} /dev/input/event<x>\n", .{std.os.argv[0]});
@@ -61,7 +61,7 @@ pub fn main() anyerror!void {
     }
 }
 
-fn write_event(uinput_dev: ?*c.libevdev_uinput, ev_type: c_uint, ev_code: c_uint, ev_value: c_int) anyerror!void {
+fn write_event(uinput_dev: ?*c.libevdev_uinput, ev_type: c_uint, ev_code: c_uint, ev_value: c_int) !void {
     if (c.libevdev_uinput_write_event(uinput_dev, ev_type, ev_code, ev_value) != 0) return error.UInputEventWriteError;
     if (c.libevdev_uinput_write_event(uinput_dev, c.EV_SYN, c.SYN_REPORT, 0) != 0) return error.UInputEventWriteError;
 }
