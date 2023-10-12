@@ -9,8 +9,7 @@ pub fn build(b: *std.Build) void {
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    // const optimize = b.standardOptimizeOption(.{.preferred_optimize_mode=.ReleaseSmall});
-    const optimize = b.standardOptimizeOption(.{});
+    const optimize = b.standardOptimizeOption(.{.preferred_optimize_mode=.ReleaseSmall});
 
     const exe = b.addExecutable(.{
         .name = "caps-esc",

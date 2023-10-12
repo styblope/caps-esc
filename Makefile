@@ -1,7 +1,7 @@
 all: build
 
 build:
-	zig build
+	zig build -Drelease
 
 install:
 	zig build -Drelease
